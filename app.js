@@ -29,7 +29,7 @@ mongoose.connect(url, {useNewUrlParser: true});
 2-PASSPORT CONFIGURATION 
 */
 app.use(session({
-    secret: "Once again Rusty wins cutest dog!",
+    secret: "I Love Farmdaily!",
     resave: false,
     saveUninitialized: false
 }));
