@@ -1,18 +1,21 @@
-// Before you run this app, ake sure the recommendation engine (another service written in python, Django) is up. 
+/*
+NOTE: Before you run this app, make sure the recommender engine (another service written in python, Django) is up.
+*/ 
 var express     = require("express"),
     app         = express(),
-    bodyParser  = require("body-parser"),
-    mongoose    = require("mongoose"),
+    request     = require("request"),
     flash       = require("connect-flash"),
+    bodyParser  = require("body-parser"),
+    request     = require("request"),
     session     = require("express-session")
     passport    = require("passport"),
-    LocalStrategy = require("passport-local"),
+    LocalStrategy  = require("passport-local"),
     methodOverride = require("method-override"),
-    Product  = require("./models/product"),
-    Comment     = require("./models/comment"),
-    User        = require("./models/user"),
+    mongoose    = require("mongoose"),
     seedDB      = require("./seeds"),
-    request = require("request");
+    Product     = require("./models/product"),
+    Comment     = require("./models/comment"),
+    User        = require("./models/user");
 
 
 
