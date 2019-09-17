@@ -1,13 +1,13 @@
 {
-  "name": "v1",
+  "name": "farm-daily",
   "version": "1.0.0",
-  "description": "YelpCamp v1",
+  "description": "Recommender System for Online Shopping.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
-  "author": "Colt Steele",
+  "author": "Konglin Zhu",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.14.1",

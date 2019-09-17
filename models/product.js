@@ -17,13 +17,7 @@ var productSchema = new mongoose.Schema({
          type: mongoose.Schema.Types.ObjectId,
          ref: "Comment"
       }
-   ],
-   recommendations: [
-      {
-          type: mongoose.Schema.Types.ObjectId,
-          ref:  "Product"
-      }
-  ]
+   ]
 });
 
 module.exports = mongoose.model("Product", productSchema);

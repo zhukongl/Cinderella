@@ -5,9 +5,9 @@ var User = require("../models/user");
 var middleware = require("../middleware");
 var request = require("request");
 
-var ACCESS_KEY = "Token f31dea387d3fac8c7e200206336c09cd46c72bc4"
+var ACCESS_KEY = "Token c6f02775276bdcdac8320482013f21589f2cd737"
 
-//INDEX - show all products
+// INDEX - show all products
 router.get("/", function(req, res){
     // Get all products from DB
     Product.find({}, function(err, allProducts){
@@ -19,7 +19,7 @@ router.get("/", function(req, res){
     });
 });
 
-//CREATE - add new product to DB
+// CREATE - add new product to DB
 router.post("/", middleware.isLoggedIn, function(req, res){
     // get data from form and add to products array
     var name = req.body.name;
@@ -30,47 +30,20 @@ router.post("/", middleware.isLoggedIn, function(req, res){
         id: req.user._id,
         username: req.user.username
     }
-
     // Create a new product and save to local DB
     var newProduct = {name: name, image: image, price: price, description: desc, author:author}
     Product.create(newProduct, function(err, newlyCreated){
         if(err){
             console.log(err);
         } else {
-            // get data from form and add to products array
-            var iid = newlyCreated._id;
-            var requestData = {
-                "event" : "$set",
-                "entityType" : "item",
-                "entityId" : iid,
-                "properties" : {
-                    "categories" : ["c1", "c2"]
-                },
-                "eventTime" : Date.now
-            };
-            
-            //step-2: data collection: send data to event server at localhost: 7070;
-            request({
-                url: url,
-                method: "POST",
-                json: requestData,
-                headers: {'Authorization': ACCESS_KEY}
-            },function (error, resp, body){
-                if(error) {
-                    console.log(error);
-                }
-                else {
-                    console.log("new item successfully post to event server!");
-                }
-            });
             //redirect back to products page
-            console.log(newlyCreated);
+            console.log("new product created!");
             res.redirect("/products");
         }
     });
 });
 
-//Buy - user buy new item to DB
+//Buy - user buy a product.
 router.post("/:uid/:iid", middleware.isLoggedIn, function(req, res){
     // get data from form and add to products array
     var uid = req.params.uid;
@@ -83,17 +56,12 @@ router.post("/:uid/:iid", middleware.isLoggedIn, function(req, res){
         "pid" : iid,
         "eventTime" : Date.now
       };
-    
-    //option: step-1: data assocoation, just like add comments
-    // data association? 
-        //yes: so we do not need to contact server every time we need a recommendation request;
-        //no : we do online predictions: inquery server every time we render a recommendation. 
-        // pass;
     User.findById(uid, function(err, user){
         if(err){
             console.log(err);
             res.redirect("/products/show", {product: iid});
         } else {
+            console.log(type(iid))
             user.purchases.push(iid);
             user.save();
             req.flash("success", "Successfully added to cart");
@@ -101,7 +69,7 @@ router.post("/:uid/:iid", middleware.isLoggedIn, function(req, res){
         }
     });
 
-    //step-2: send purchase data to event server at localhost: 7070;
+    //step-2: send transaction data to recommender engine at localhost: 7070;
     var url = "http://127.0.0.1:8000/newtransaction"
     request({
         url: url,
@@ -115,23 +83,6 @@ router.post("/:uid/:iid", middleware.isLoggedIn, function(req, res){
         }
         else {
             console.log(body["state"]);
-        }
-    });
-
-    // test: query recommender engine:
-    var url = "http://127.0.0.1:8000/query"
-    request({
-        url: url,
-        method: "POST",
-        json: {"uid" : uid, "n_rec": 5},
-        headers: {'Authorization': ACCESS_KEY}
-    },function (error, resp, body){
-        if(error) {
-            console.log(error);
-        }
-        else {
-            console.log("users_to_recommend are: "+ body["users_to_recommend"]);
-            console.log("recommendations are: "+ body["recom"]);
         }
     });
 
@@ -155,7 +106,7 @@ router.post("/:uid/:iid", middleware.isLoggedIn, function(req, res){
 router.get("/profile", middleware.isLoggedIn, function(req, res){
     // Get all purchases and recommendation from current users DB
     // currentUseris global
-    User.findById(req.user._id).populate("purchases").exec(function(err, foundUser){
+    User.findById(req.user._id).populate("purchases").populate("recommendations").exec(function(err, foundUser){
         if(err){
             console.log(err);
         } else {
@@ -166,7 +117,7 @@ router.get("/profile", middleware.isLoggedIn, function(req, res){
 });
 
 
-//NEW - show form to create new product
+// NEW - show form to create new product
 router.get("/new", middleware.isLoggedIn, function(req, res){
    res.render("products/new"); 
 });

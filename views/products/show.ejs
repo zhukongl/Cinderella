@@ -58,22 +58,6 @@
                     </div>
                 <% }) %>
             </div>
-            <div class="well">
-                <h1>Recommendations</h1>
-                <% product.recommendations.forEach(function(foundProduct){ %>
-                    <div class="col-md-3 col-sm-6">
-                        <div class="thumbnail">
-                        <img src="<%= foundProduct.image %>">
-                        <div class="caption">
-                            <h4><%= foundProduct.name %></h4>
-                        </div>
-                        <!-- <p>
-                            <a href="/products/<%= product._id %>" class="btn btn-primary">More Info</a>
-                        </p> -->
-                        </div>
-                    </div>
-                <% }); %>
-            </div>
         </div>
     </div>
 </div>

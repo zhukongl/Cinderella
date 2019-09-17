@@ -11,12 +11,30 @@
         </div>
 
         <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-            <p>Purchases</p>
+            <h1>Purchases</h1>
             <div>
                 <% foundUser.purchases.forEach(function(product){ %>
                     <div class="col-md-3 col-sm-6">
                         <div class="thumbnail">
-                        <img src="<%= product.image %>">
+                            <img src="<%= product.image %>">
+                        <div class="caption">
+                            <h4><%= product.name %></h4>
+                        </div>
+                        <!-- <p>
+                            <a href="/products/<%= product._id %>" class="btn btn-primary">More Info</a>
+                        </p> -->
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+        <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+            <h1>Recommendations</h1>
+            <div>
+                <% foundUser.recommendations.forEach(function(product){ %>
+                    <div class="col-md-3 col-sm-6">
+                        <div class="thumbnail">
+                            <img src="<%= product.image %>">
                         <div class="caption">
                             <h4><%= product.name %></h4>
                         </div>
